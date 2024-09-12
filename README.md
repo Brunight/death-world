@@ -1,4 +1,4 @@
-# Death World
+# ☠️ Death World
 
 This plugin will create a Lobby world with a bedrock platform. Then, an admin can begin the gameplay running `/dw start` to create a new survival world and teleport everyone there. If someone dies, the whole world will be **fully deleted**, simple as that! Everyone is teleported back to the Lobby, the world will be deleted **with no chance for backups**, a new survival world will be created and so on!
 
