@@ -13,10 +13,10 @@ This command will delete the ongoing survival world, create a new one, and telep
 
 ### String `mode`
 
-- `world` will create a new world on player death;
+- `default` will create a new world on player death;
 - `killall` will kill everyone, but current world and progress is kept.
-Defaults to `world`.
+Defaults to `default`.
 
 ### Boolean `autoGenerateNewWorld`
 
-This config defines if a new world should be automatically generated on player death. If set to false, an admin needs to run the start command to create a new world and continue the gameplay. This gives players time to mock the player who died! Only works with 'mode' = 'world'. Default to `true`.
+This config defines if a new world should be automatically generated on player death. If set to false, an admin needs to run the start command to create a new world and continue the gameplay. This gives players time to mock the player who died! Only works with 'mode' = 'default'. Default to `true`.

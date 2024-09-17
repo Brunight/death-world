@@ -1,6 +1,7 @@
 package io.papermc.deathworld.listeners;
 
 import io.papermc.deathworld.DeathWorldPlugin;
+import io.papermc.deathworld.enums.DeathWorldMode;
 import io.papermc.deathworld.helpers.PlayerHelper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -41,11 +42,11 @@ public class PlayerDeathListener implements Listener {
         this.plugin.deathLogHelper.log(deathLog);
 
         Location lobby = this.plugin.worldManager.getLobbyWorld().getSpawnLocation();
-        final String mode = this.plugin.mainConfig.getString("mode");
+        final DeathWorldMode mode = this.plugin.getMode();
         final Boolean autoGenerateNewWorld = this.plugin.mainConfig.getBoolean("autoGenerateNewWorld");
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendActionBar(event.deathMessage().color(NamedTextColor.RED));
-            if (mode.equals("world")) {
+            if (mode.equals(DeathWorldMode.DEFAULT)) {
                 player.setRespawnLocation(lobby, true);
                 if (player.equals(playerResetCause)) {
                     Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
@@ -62,7 +63,7 @@ public class PlayerDeathListener implements Listener {
         }
 
         Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-            if (mode.equals("world")) {
+            if (mode.equals(DeathWorldMode.DEFAULT)) {
                 Bukkit.getOnlinePlayers().forEach(p -> {
                     PlayerHelper.resetPlayer(p);
                     p.teleport(lobby);
@@ -70,7 +71,7 @@ public class PlayerDeathListener implements Listener {
                 if (autoGenerateNewWorld) {
                     this.plugin.worldManager.createNewGameplayWorld();
                 }
-            } else if (mode.equals("killall")) {
+            } else if (mode.equals(DeathWorldMode.KILL_ALL)) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (player.equals(playerResetCause)) {
                         continue;

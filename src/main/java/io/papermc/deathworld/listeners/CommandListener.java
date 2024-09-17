@@ -1,6 +1,7 @@
 package io.papermc.deathworld.listeners;
 
 import io.papermc.deathworld.DeathWorldPlugin;
+import io.papermc.deathworld.enums.DeathWorldMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,16 +32,14 @@ public class CommandListener implements CommandExecutor {
                     return true;
                 } else if (args[0].equalsIgnoreCase("setmode")) {
                     String newMode = args[1];
-                    switch (newMode) {
-                        case "killall":
-                        case "world":
-                            this.plugin.mainConfig.set("mode", newMode);
-                            this.plugin.saveConfig();
+                    return switch (newMode) {
+                        case "killall", "world" -> {
+                            this.plugin.setMode(DeathWorldMode.getMode(newMode));
 
-                            return true;
-                        default:
-                            return false;
-                    }
+                            yield true;
+                        }
+                        default -> false;
+                    };
                 } else if (args[0].equalsIgnoreCase("setautogeneratenewworld")) {
                     String configArg = args[1];
                     if (configArg.equalsIgnoreCase("true") || configArg.equalsIgnoreCase("false")) {
