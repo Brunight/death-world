@@ -111,7 +111,7 @@ public class PlayerDeathListener implements Listener {
         }
 
         if (hasSoftkillMetadata) {
-            p.setMetadata("softkill", new FixedMetadataValue(plugin, null));
+            p.removeMetadata("softkill", plugin);
 
             return false;
         }
