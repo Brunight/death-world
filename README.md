@@ -4,19 +4,33 @@ This plugin will create a Lobby world with a bedrock platform. Then, an admin ca
 
 Players death count will be in their nicknames and tab list, and players death messages will be stored in the plugin data folder.
 
+## Modes
+
+### `default`
+In this mode, after a player dies, a new world will be generated and gameplay will restart there.
+
+### `killall`
+In this mode, after a player dies, everyone is also killed, and the current world progress is kept.\
+Players that were offline when a death happened will be killed upon joining the server (it will not be counted to trigger a death).
+
 ## Commands
 
 ### `/dw start`
 This command will delete the ongoing survival world, create a new one, and teleport everyone there.
 
+### `/dw softkill <player>`
+This command will softkill a player.\
+This means that the target player will die, but will not trigger a world death and will not be counted.
+
 ## Configuration
 
-### String `mode`
+### `mode` - string
 
 - `default` will create a new world on player death;
 - `killall` will kill everyone, but current world and progress is kept.
-Defaults to `default`.
 
-### Boolean `autoGenerateNewWorld`
+See more details about modes above. Defaults to `default`.
 
-This config defines if a new world should be automatically generated on player death. If set to false, an admin needs to run the start command to create a new world and continue the gameplay. This gives players time to mock the player who died! Only works with 'mode' = 'default'. Default to `true`.
+### `autoGenerateNewWorld` - boolean
+
+This option defines if a new world should be automatically generated on player death. If set to false, an admin needs to run the start command to create a new world and continue the gameplay. This should give time to your players to mock the player who died! Only works in `default` mode. Defaults to `true`.
