@@ -24,7 +24,6 @@ public class DeathCountManager {
         deathsFile = new File(plugin.getDataFolder(), FILENAME);
         deathsConfig = YamlConfiguration.loadConfiguration(deathsFile);
 
-
         if (deathsFile.exists()) {
             for (String key : deathsConfig.getKeys(false)) {
                 int deaths = deathsConfig.getInt(key);
@@ -54,6 +53,6 @@ public class DeathCountManager {
     }
 
     public Integer getPlayerDeaths(Player player) {
-        return playerDeathCounts.getOrDefault(player.getName(),0);
+        return playerDeathCounts.getOrDefault(player.getName(), 0);
     }
 }

@@ -17,7 +17,6 @@ public class PlayerJoinListener implements Listener {
         this.plugin = plugin;
     }
 
-
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -39,7 +38,8 @@ public class PlayerJoinListener implements Listener {
 
         this.plugin.getSLF4JLogger().info(
                 "Player " + player.getName() + " has been teleported to the current world: " + currentWorld.getName());
-        player.sendMessage(Component.text("A new world was created while you were offline.").color(NamedTextColor.GOLD));
+        player.sendMessage(
+                Component.text("A new world was created while you were offline.").color(NamedTextColor.GOLD));
         player.sendMessage(Component.text("You will now be teleported to it.").color(NamedTextColor.GOLD));
     }
 }

@@ -29,20 +29,17 @@ public class DeathWorldPlugin extends JavaPlugin {
                 "Death World mode.",
                 "'world' will create a new world on player death;",
                 "'killall' will kill everyone, but current world is kept.",
-                "Defaults to 'world'."
-        ));
+                "Defaults to 'world'."));
         mainConfig.addDefault("autoGenerateNewWorld", true);
         mainConfig.setComments("autoGenerateNewWorld", List.of(
                 "Should automatically generate a new world on player death.",
                 "If set to false, an admin needs to run the command '/dw start' to create a new world.",
                 "Only works with 'mode' = 'world'.",
-                "Defaults to 'true'."
-        ));
+                "Defaults to 'true'."));
         mainConfig.addDefault("currentWorld", "lobby");
         mainConfig.setComments("currentWorld", List.of(
                 "Tracks the world name which has a gameplay running.",
-                "This field should not be directly changed."
-        ));
+                "This field should not be directly changed."));
         mainConfig.options().parseComments(true);
         mainConfig.options().copyDefaults(true);
         saveConfig();

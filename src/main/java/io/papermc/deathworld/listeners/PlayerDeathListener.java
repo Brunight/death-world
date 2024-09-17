@@ -23,7 +23,6 @@ public class PlayerDeathListener implements Listener {
         this.plugin = plugin;
     }
 
-
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (event.getPlayer().getWorld().getName().equals("lobby") || playerResetCause != null) {
@@ -37,9 +36,9 @@ public class PlayerDeathListener implements Listener {
         Integer newDeathCount = this.plugin.deathCountManager.addPlayerDeath(playerResetCause);
         PlayerHelper.setDeathCountIntoPlayerNickname(playerResetCause, newDeathCount);
 
-        String deathLog = playerResetCause.getName() + " died: " + PlainTextComponentSerializer.plainText().serialize(event.deathMessage());
+        String deathLog = playerResetCause.getName() + " died: "
+                + PlainTextComponentSerializer.plainText().serialize(event.deathMessage());
         this.plugin.deathLogHelper.log(deathLog);
-
 
         Location lobby = this.plugin.worldManager.getLobbyWorld().getSpawnLocation();
         final String mode = this.plugin.mainConfig.getString("mode");
@@ -56,7 +55,8 @@ public class PlayerDeathListener implements Listener {
             }
             final Component title = Component.text(playerResetCause.getName() + " died", NamedTextColor.RED);
             final Component subtitle = event.deathMessage().color(NamedTextColor.WHITE);
-            final Title.Times times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(3000), Duration.ofMillis(500));
+            final Title.Times times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(3000),
+                    Duration.ofMillis(500));
 
             player.showTitle(Title.title(title, subtitle, times));
         }
@@ -83,7 +83,6 @@ public class PlayerDeathListener implements Listener {
         }, 60);
 
         return;
-
 
     }
 }

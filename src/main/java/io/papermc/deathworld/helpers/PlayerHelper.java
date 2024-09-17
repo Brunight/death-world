@@ -23,7 +23,6 @@ public class PlayerHelper {
         setPlayerNickname(player, newNickname);
     }
 
-
     public static void resetPlayer(Player player) {
         player.getInventory().clear();
         player.setExp(0);

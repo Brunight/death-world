@@ -22,7 +22,6 @@ public class WorldManager {
     public WorldManager(DeathWorldPlugin plugin) {
         this.plugin = plugin;
 
-
         setupLobby();
 
         String currentWorldName = this.plugin.mainConfig.getString("currentWorld");
@@ -33,7 +32,6 @@ public class WorldManager {
             plugin.saveConfig();
         }
     }
-
 
     private World loadWorld(String worldName) {
         World world = Bukkit.getWorld(worldName);
@@ -48,13 +46,13 @@ public class WorldManager {
         }
         return world;
     }
-    
+
     private void setupLobby() {
         lobbyWorld = loadWorld("lobby");
         if (lobbyWorld != null) {
             return;
         }
-        
+
         this.plugin.getSLF4JLogger().info("Lobby world not found! Creating a new lobby world...");
         WorldCreator creator = new WorldCreator("lobby");
         creator.generator(new VoidWorldGenerator());
@@ -73,7 +71,7 @@ public class WorldManager {
                 block.setType(Material.BEDROCK);
             }
         }
-        
+
         lobbyWorld = world;
         this.plugin.getSLF4JLogger().info("Lobby created successfully.");
     }
@@ -111,7 +109,7 @@ public class WorldManager {
                             if (oldEndWorld != null) {
                                 unloadAndDeleteWorld(oldEndWorld);
                             }
-                            
+
                             // Unload and delete the Overworld
                             unloadAndDeleteWorld(currentWorld);
                         }
@@ -120,7 +118,8 @@ public class WorldManager {
 
                         // Create Overworld
                         World overworld = Bukkit
-                                .createWorld(new WorldCreator(newWorldName).environment(World.Environment.NORMAL).keepSpawnLoaded(TriState.FALSE));
+                                .createWorld(new WorldCreator(newWorldName).environment(World.Environment.NORMAL)
+                                        .keepSpawnLoaded(TriState.FALSE));
                         if (overworld == null) {
                             pl.getSLF4JLogger().error("Failed to create the Overworld.");
                             return;
@@ -129,7 +128,8 @@ public class WorldManager {
 
                         // Create Nether
                         World netherWorld = Bukkit.createWorld(
-                                new WorldCreator(newWorldName + "_nether").environment(World.Environment.NETHER).keepSpawnLoaded(TriState.FALSE));
+                                new WorldCreator(newWorldName + "_nether").environment(World.Environment.NETHER)
+                                        .keepSpawnLoaded(TriState.FALSE));
                         if (netherWorld == null) {
                             pl.getSLF4JLogger().error("Failed to create the Nether world.");
                             return;
@@ -138,7 +138,8 @@ public class WorldManager {
 
                         // Create The End
                         World endWorld = Bukkit.createWorld(
-                                new WorldCreator(newWorldName + "_the_end").environment(World.Environment.THE_END).keepSpawnLoaded(TriState.FALSE));
+                                new WorldCreator(newWorldName + "_the_end").environment(World.Environment.THE_END)
+                                        .keepSpawnLoaded(TriState.FALSE));
                         if (endWorld == null) {
                             pl.getSLF4JLogger().error("Failed to create The End world.");
                             return;
@@ -175,9 +176,9 @@ public class WorldManager {
         }
 
         // Ensure no players are in the world before unloading
-         for (Player player : world.getPlayers()) {
-             player.teleport(lobbyWorld.getSpawnLocation());
-         }
+        for (Player player : world.getPlayers()) {
+            player.teleport(lobbyWorld.getSpawnLocation());
+        }
 
         // Unload the world and save chunks
         boolean unloaded = Bukkit.unloadWorld(world, true);
@@ -191,9 +192,11 @@ public class WorldManager {
                     File worldFolder = world.getWorldFolder();
                     try {
                         deleteWorldFolder(worldFolder);
-                        plugin.getSLF4JLogger().info("World folder " + world.getName() + " has been successfully deleted.");
+                        plugin.getSLF4JLogger()
+                                .info("World folder " + world.getName() + " has been successfully deleted.");
                     } catch (IOException e) {
-                        plugin.getSLF4JLogger().error("Failed to delete world folder " + world.getName() + ": " + e.getMessage());
+                        plugin.getSLF4JLogger()
+                                .error("Failed to delete world folder " + world.getName() + ": " + e.getMessage());
                     }
                 }
             }.runTaskAsynchronously(plugin); // Run deletion asynchronously to avoid blocking the main thread
