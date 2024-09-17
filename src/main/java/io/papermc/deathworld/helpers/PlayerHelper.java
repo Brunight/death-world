@@ -3,9 +3,12 @@ package io.papermc.deathworld.helpers;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
+
+import java.util.Objects;
 
 public class PlayerHelper {
     public static void setPlayerNickname(Player player, Component component) {
@@ -43,5 +46,14 @@ public class PlayerHelper {
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.teleport(world.getSpawnLocation());
         });
+    }
+
+    public static void fixPlayerRespawnPoint(Player p, World world) {
+        Location worldSpawnPoint = world.getSpawnLocation();
+        Location newSpawnPoint = Objects.requireNonNullElse(p.getRespawnLocation(), worldSpawnPoint);
+
+        if (!newSpawnPoint.equals(worldSpawnPoint)) {
+            p.setRespawnLocation(newSpawnPoint, true);
+        }
     }
 }

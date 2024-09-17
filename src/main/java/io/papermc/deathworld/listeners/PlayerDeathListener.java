@@ -9,6 +9,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,13 +27,23 @@ public class PlayerDeathListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (event.getPlayer().getWorld().getName().equals("lobby") || playerResetCause != null) {
+        Player deadPlayer = event.getPlayer();
+        final DeathWorldMode mode = this.plugin.getMode();
+        final boolean autoGenerateNewWorld = this.plugin.mainConfig.getBoolean("autoGenerateNewWorld");
+
+        // Fix broken bed (null respawn point) for killall mode
+        if (mode.equals(DeathWorldMode.KILL_ALL)) {
+            World currentWorld = this.plugin.worldManager.getCurrentWorld();
+            PlayerHelper.fixPlayerRespawnPoint(deadPlayer, currentWorld);
+        }
+
+        if (deadPlayer.getWorld().getName().equals("lobby") || playerResetCause != null) {
             event.deathMessage(null);
 
             return;
         }
 
-        playerResetCause = event.getPlayer();
+        playerResetCause = deadPlayer;
 
         Integer newDeathCount = this.plugin.deathCountManager.addPlayerDeath(playerResetCause);
         PlayerHelper.setDeathCountIntoPlayerNickname(playerResetCause, newDeathCount);
@@ -42,8 +53,6 @@ public class PlayerDeathListener implements Listener {
         this.plugin.deathLogHelper.log(deathLog);
 
         Location lobby = this.plugin.worldManager.getLobbyWorld().getSpawnLocation();
-        final DeathWorldMode mode = this.plugin.getMode();
-        final boolean autoGenerateNewWorld = this.plugin.mainConfig.getBoolean("autoGenerateNewWorld");
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendActionBar(event.deathMessage().color(NamedTextColor.RED));
             if (mode.equals(DeathWorldMode.DEFAULT)) {
