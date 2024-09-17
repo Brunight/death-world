@@ -1,9 +1,9 @@
 package io.papermc.deathworld;
 
 import io.papermc.deathworld.Helpers.LogHelper;
-import io.papermc.deathworld.Listeners.CommandListener;
-import io.papermc.deathworld.Listeners.PlayerDeathListener;
-import io.papermc.deathworld.Listeners.PlayerJoinListener;
+import io.papermc.deathworld.listeners.CommandListener;
+import io.papermc.deathworld.listeners.PlayerDeathListener;
+import io.papermc.deathworld.listeners.PlayerJoinListener;
 import io.papermc.deathworld.managers.DeathCountManager;
 import io.papermc.deathworld.managers.WorldManager;
 

@@ -1,4 +1,4 @@
-package io.papermc.deathworld.Listeners;
+package io.papermc.deathworld.listeners;
 
 import io.papermc.deathworld.DeathWorldPlugin;
 import io.papermc.deathworld.Helpers.PlayerHelper;
