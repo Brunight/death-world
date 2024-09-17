@@ -22,7 +22,6 @@ public class CommandListener implements CommandExecutor {
                     this.plugin.worldManager.createNewGameplayWorld();
                     return true;
                 } else if (args[0].equalsIgnoreCase("lobby")) {
-                    // Handle "/dw lobby" command
                     if (sender instanceof Player player) {
                         player.teleport(this.plugin.worldManager.getLobbyWorld().getSpawnLocation());
                         player.sendMessage("You have been teleported to the lobby.");

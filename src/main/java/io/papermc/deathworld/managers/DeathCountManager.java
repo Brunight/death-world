@@ -13,9 +13,9 @@ import java.util.HashMap;
 public class DeathCountManager {
     final String FILENAME = "deaths.yml";
     final private DeathWorldPlugin plugin;
-    private File deathsFile;
-    private FileConfiguration deathsConfig;
-    private HashMap<String, Integer> playerDeathCounts = new HashMap<>();
+    private final File deathsFile;
+    private final FileConfiguration deathsConfig;
+    private final HashMap<String, Integer> playerDeathCounts = new HashMap<>();
 
     public DeathCountManager(DeathWorldPlugin plugin) {
         this.plugin = plugin;

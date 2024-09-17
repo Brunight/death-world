@@ -58,7 +58,13 @@ public class WorldManager {
         creator.generator(new VoidWorldGenerator());
         creator.type(WorldType.FLAT);
         World world = Bukkit.createWorld(creator);
+        if (world == null) {
+            plugin.getSLF4JLogger().error("Something went wrong while creating the world.");
+            return;
+        }
+
         world.setSpawnLocation(0, 65, 0);
+
         world.setDifficulty(Difficulty.PEACEFUL);
 
         int centerX = 0;
@@ -85,7 +91,6 @@ public class WorldManager {
     }
 
     public void createNewGameplayWorld() {
-        DeathWorldPlugin pl = this.plugin;
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -121,7 +126,7 @@ public class WorldManager {
                                 .createWorld(new WorldCreator(newWorldName).environment(World.Environment.NORMAL)
                                         .keepSpawnLoaded(TriState.FALSE));
                         if (overworld == null) {
-                            pl.getSLF4JLogger().error("Failed to create the Overworld.");
+                            plugin.getSLF4JLogger().error("Failed to create the Overworld.");
                             return;
                         }
                         overworld.setDifficulty(difficulty);
@@ -131,7 +136,7 @@ public class WorldManager {
                                 new WorldCreator(newWorldName + "_nether").environment(World.Environment.NETHER)
                                         .keepSpawnLoaded(TriState.FALSE));
                         if (netherWorld == null) {
-                            pl.getSLF4JLogger().error("Failed to create the Nether world.");
+                            plugin.getSLF4JLogger().error("Failed to create the Nether world.");
                             return;
                         }
                         netherWorld.setDifficulty(difficulty);
@@ -141,14 +146,14 @@ public class WorldManager {
                                 new WorldCreator(newWorldName + "_the_end").environment(World.Environment.THE_END)
                                         .keepSpawnLoaded(TriState.FALSE));
                         if (endWorld == null) {
-                            pl.getSLF4JLogger().error("Failed to create The End world.");
+                            plugin.getSLF4JLogger().error("Failed to create The End world.");
                             return;
                         }
                         endWorld.setDifficulty(difficulty);
                         // Update the current world reference to the new Overworld
                         currentWorld = overworld;
-                        pl.mainConfig.set("currentWorld", newWorldName);
-                        pl.saveConfig();
+                        plugin.mainConfig.set("currentWorld", newWorldName);
+                        plugin.saveConfig();
 
                         // Teleport all players to the new Overworld after creation
                         new BukkitRunnable() {
@@ -160,14 +165,14 @@ public class WorldManager {
                                     player.setRespawnLocation(currentWorld.getSpawnLocation(), true);
                                 }
                                 ServerHelper.say("World created. Teleporting online players...");
-                                pl.getSLF4JLogger()
+                                plugin.getSLF4JLogger()
                                         .info("All players have been teleported to the new Overworld: " + newWorldName);
                             }
-                        }.runTask(pl); // Run on the main thread
+                        }.runTask(plugin); // Run on the main thread
                     }
-                }.runTask(pl); // Run the world creation on the main thread
+                }.runTask(plugin); // Run the world creation on the main thread
             }
-        }.runTaskAsynchronously(pl); // Run the overall task asynchronously
+        }.runTaskAsynchronously(plugin); // Run the overall task asynchronously
     }
 
     private void unloadAndDeleteWorld(World world) {

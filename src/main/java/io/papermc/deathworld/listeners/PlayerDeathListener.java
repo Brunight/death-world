@@ -43,7 +43,7 @@ public class PlayerDeathListener implements Listener {
 
         Location lobby = this.plugin.worldManager.getLobbyWorld().getSpawnLocation();
         final DeathWorldMode mode = this.plugin.getMode();
-        final Boolean autoGenerateNewWorld = this.plugin.mainConfig.getBoolean("autoGenerateNewWorld");
+        final boolean autoGenerateNewWorld = this.plugin.mainConfig.getBoolean("autoGenerateNewWorld");
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendActionBar(event.deathMessage().color(NamedTextColor.RED));
             if (mode.equals(DeathWorldMode.DEFAULT)) {
@@ -82,8 +82,5 @@ public class PlayerDeathListener implements Listener {
             }
             playerResetCause = null;
         }, 60);
-
-        return;
-
     }
 }
