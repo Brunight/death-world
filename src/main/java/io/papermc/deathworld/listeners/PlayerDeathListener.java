@@ -75,21 +75,19 @@ public class PlayerDeathListener implements Listener {
 
         Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
             if (mode.equals(DeathWorldMode.DEFAULT)) {
-                Bukkit.getOnlinePlayers().forEach(p -> {
-                    PlayerHelper.resetPlayer(p);
-                    p.teleport(lobby);
-                });
                 if (autoGenerateNewWorld) {
                     this.plugin.worldManager.createNewGameplayWorld();
                 }
             } else if (mode.equals(DeathWorldMode.KILL_ALL)) {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (player.equals(playerResetCause)) {
-                        continue;
+                Bukkit.getOnlinePlayers().forEach(p -> {
+                    if (p.equals(playerResetCause)) {
+                        return;
                     }
 
-                    player.setHealth(0);
-                }
+                    p.setHealth(0);
+                });
+
+                this.plugin.playersToKillOnLoginManager.addOfflinePlayersToKillOnLoginList();
             }
             playerResetCause = null;
         }, 60);
@@ -97,6 +95,10 @@ public class PlayerDeathListener implements Listener {
 
     private Boolean shouldDeathCount(Player p) {
         if (p.getWorld().getName().equals("lobby") || playerResetCause != null) {
+            return false;
+        }
+
+        if (this.plugin.playersToKillOnLoginManager.removePlayerFromKillOnLoginList(p)) {
             return false;
         }
 

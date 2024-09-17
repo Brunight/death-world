@@ -6,6 +6,7 @@ import io.papermc.deathworld.listeners.CommandListener;
 import io.papermc.deathworld.listeners.PlayerDeathListener;
 import io.papermc.deathworld.listeners.PlayerJoinListener;
 import io.papermc.deathworld.managers.DeathCountManager;
+import io.papermc.deathworld.managers.PlayersToKillOnLoginManager;
 import io.papermc.deathworld.managers.WorldManager;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,6 +21,8 @@ public class DeathWorldPlugin extends JavaPlugin {
     public LogHelper deathLogHelper;
     public DeathCountManager deathCountManager;
     public WorldManager worldManager;
+    public PlayersToKillOnLoginManager playersToKillOnLoginManager;
+
     private DeathWorldMode mode = DeathWorldMode.DEFAULT;
 
     @Override

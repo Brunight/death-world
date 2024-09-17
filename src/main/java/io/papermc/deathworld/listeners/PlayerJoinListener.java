@@ -1,7 +1,9 @@
 package io.papermc.deathworld.listeners;
 
 import io.papermc.deathworld.DeathWorldPlugin;
+import io.papermc.deathworld.enums.DeathWorldMode;
 import io.papermc.deathworld.helpers.PlayerHelper;
+import io.papermc.deathworld.helpers.ServerHelper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.World;
@@ -25,9 +27,18 @@ public class PlayerJoinListener implements Listener {
         PlayerHelper.setDeathCountIntoPlayerNickname(player, deathCount);
 
         World currentWorld = this.plugin.worldManager.getCurrentWorld();
+
         // Check if the player is already in the current world
         if (player.getWorld().equals(currentWorld)) {
-            return; // Do nothing if the player is already in the current world
+            if (this.plugin.getMode() == DeathWorldMode.KILL_ALL) {
+                if (this.plugin.playersToKillOnLoginManager.isPlayerInKillOnLoginList(player)) {
+                    player.sendMessage(Component.text("Someone died while you were offline.").color(NamedTextColor.GOLD));
+                    ServerHelper.say(player.getName() + " was offline when a death occurred and died as well.");
+                    player.setHealth(0);
+                }
+            }
+
+            return;
         }
 
         player.teleport(currentWorld.getSpawnLocation());
