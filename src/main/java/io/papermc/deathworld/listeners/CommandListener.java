@@ -2,10 +2,16 @@ package io.papermc.deathworld.listeners;
 
 import io.papermc.deathworld.DeathWorldPlugin;
 import io.papermc.deathworld.enums.DeathWorldMode;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
+
+import java.util.Objects;
 
 public class CommandListener implements CommandExecutor {
     private final DeathWorldPlugin plugin;
@@ -50,6 +56,19 @@ public class CommandListener implements CommandExecutor {
                     }
 
                     return false;
+                } else if (args[0].equalsIgnoreCase("softkill")) {
+                    try {
+                        Player target = Objects.requireNonNull(Bukkit.getPlayer(args[1]));
+                        target.setMetadata("softkill", new FixedMetadataValue(plugin, true));
+                        target.sendMessage(Component.text("You were softkilled by an admin. This death will not be counted or tracked.").color(NamedTextColor.GOLD));
+                        target.setHealth(0);
+                        sender.sendMessage(Component.text("You softkilled " + target.getName()).color(NamedTextColor.GOLD));
+                    } catch (Exception e) {
+                        sender.sendMessage(Component.text("Player not found!").color(NamedTextColor.GOLD));
+                        return false;
+                    }
+
+                    return true;
                 }
             }
         }

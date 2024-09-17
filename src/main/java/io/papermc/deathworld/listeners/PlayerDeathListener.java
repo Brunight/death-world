@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 
 import java.time.Duration;
 
@@ -37,7 +39,7 @@ public class PlayerDeathListener implements Listener {
             PlayerHelper.fixPlayerRespawnPoint(deadPlayer, currentWorld);
         }
 
-        if (deadPlayer.getWorld().getName().equals("lobby") || playerResetCause != null) {
+        if (!shouldDeathCount(deadPlayer)) {
             event.deathMessage(null);
 
             return;
@@ -91,5 +93,27 @@ public class PlayerDeathListener implements Listener {
             }
             playerResetCause = null;
         }, 60);
+    }
+
+    private Boolean shouldDeathCount(Player p) {
+        if (p.getWorld().getName().equals("lobby") || playerResetCause != null) {
+            return false;
+        }
+
+        boolean hasSoftkillMetadata = false;
+
+        for (MetadataValue meta : p.getMetadata("softkill")) {
+            if (meta.getOwningPlugin() == plugin) {
+                hasSoftkillMetadata = meta.asBoolean();
+            }
+        }
+
+        if (hasSoftkillMetadata) {
+            p.setMetadata("softkill", new FixedMetadataValue(plugin, null));
+
+            return false;
+        }
+
+        return true;
     }
 }
