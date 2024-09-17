@@ -29,6 +29,7 @@ public class DeathWorldPlugin extends JavaPlugin {
     public void onEnable() {
         deathLogHelper = new LogHelper(new File(getDataFolder(), "death_log.txt"));
         deathCountManager = new DeathCountManager(this);
+        playersToKillOnLoginManager = new PlayersToKillOnLoginManager(this);
         mainConfig = getConfig();
         mainConfig.addDefault("mode", DeathWorldMode.DEFAULT.toString());
         mainConfig.setComments("mode", List.of(
