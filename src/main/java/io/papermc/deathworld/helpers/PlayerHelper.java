@@ -49,10 +49,11 @@ public class PlayerHelper {
     }
 
     public static void fixPlayerRespawnPoint(Player p, World world) {
+        Location playerSpawnPoint = p.getRespawnLocation();
         Location worldSpawnPoint = world.getSpawnLocation();
-        Location newSpawnPoint = Objects.requireNonNullElse(p.getRespawnLocation(), worldSpawnPoint);
+        Location newSpawnPoint = Objects.requireNonNullElse(playerSpawnPoint, worldSpawnPoint);
 
-        if (!newSpawnPoint.equals(worldSpawnPoint)) {
+        if (!newSpawnPoint.equals(playerSpawnPoint)) {
             p.setRespawnLocation(newSpawnPoint, true);
         }
     }
