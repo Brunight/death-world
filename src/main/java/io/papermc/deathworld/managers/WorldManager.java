@@ -4,13 +4,20 @@ import io.papermc.deathworld.DeathWorldPlugin;
 import io.papermc.deathworld.helpers.ServerHelper;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.BiomeProvider;
+import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.generator.WorldInfo;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 public class WorldManager {
@@ -233,8 +240,56 @@ public class WorldManager {
     // Custom chunk generator for a void world
     public static class VoidWorldGenerator extends ChunkGenerator {
         @Override
-        public ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
-            return createChunkData(world); // Return an empty chunk (void)
+        public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
+            return List.of();
+        }
+
+        @Override
+        public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z, @NotNull ChunkData chunkData) {
+            // Do nothing for void world
+        }
+
+        @Override
+        public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z, @NotNull ChunkData chunkData) {
+            // Do nothing for void world
+        }
+
+        @Override
+        public void generateBedrock(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z, @NotNull ChunkData chunkData) {
+            // Do nothing for void world
+        }
+
+        @Override
+        public void generateCaves(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z, @NotNull ChunkData chunkData) {
+            // Do nothing for void world
+        }
+
+        @Override
+        @Nullable
+        public BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
+            return new VoidBiomeProvider();
+        }
+
+        @Override
+        public boolean canSpawn(@NotNull World world, int x, int z) {
+            return true;
+        }
+
+        @Override
+        public Location getFixedSpawnLocation(@NotNull World world, @NotNull Random random) {
+            return new Location(world, 0, 100, 0);
+        }
+    }
+
+    private static class VoidBiomeProvider extends BiomeProvider {
+        @Override
+        public @NotNull Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
+            return Biome.THE_VOID;
+        }
+
+        @Override
+        public @NotNull List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
+            return List.of(Biome.THE_VOID);
         }
     }
 }
