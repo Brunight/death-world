@@ -13,19 +13,25 @@ commands:
       start:
         description: Starts the world reset process.
         usage: /dw start
+      softkill:
+        description: Kills a player without counting their death.
+        usage: /dw softkill <player>
       lobby:
         description: Teleports the player to the lobby.
         usage: /dw lobby
       setmode:
-        description: Set death world mode (killall or world).
-        usage: /dw setmode
+        description: Set death world mode (default or killall).
+        usage: /dw setmode [default|killall]
       setautogeneratenewworld:
         description: Set if a new world will be generated after player death, and if mode is 'world'.
-        usage: /dw setautogeneratenewworld
+        usage: /dw setautogeneratenewworld [true|false]
 
 permissions:
   dw.command.start:
     description: Allows starting the Death World simulation.
+    default: op
+  dw.command.softkill:
+    description: Softkills a player.
     default: op
   dw.command.lobby:
     description: Allows teleporting to the lobby.
