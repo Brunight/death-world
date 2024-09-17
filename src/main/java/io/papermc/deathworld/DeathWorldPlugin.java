@@ -4,8 +4,9 @@ import io.papermc.deathworld.Helpers.LogHelper;
 import io.papermc.deathworld.Listeners.CommandListener;
 import io.papermc.deathworld.Listeners.PlayerDeathListener;
 import io.papermc.deathworld.Listeners.PlayerJoinListener;
-import io.papermc.deathworld.Managers.DeathCountManager;
-import io.papermc.deathworld.Managers.WorldManager;
+import io.papermc.deathworld.managers.DeathCountManager;
+import io.papermc.deathworld.managers.WorldManager;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 

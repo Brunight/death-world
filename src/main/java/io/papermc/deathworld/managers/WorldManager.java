@@ -1,4 +1,4 @@
-package io.papermc.deathworld.Managers;
+package io.papermc.deathworld.managers;
 
 import io.papermc.deathworld.DeathWorldPlugin;
 import io.papermc.deathworld.Helpers.ServerHelper;
