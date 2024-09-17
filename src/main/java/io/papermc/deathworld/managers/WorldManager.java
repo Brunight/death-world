@@ -1,7 +1,7 @@
 package io.papermc.deathworld.managers;
 
 import io.papermc.deathworld.DeathWorldPlugin;
-import io.papermc.deathworld.Helpers.ServerHelper;
+import io.papermc.deathworld.helpers.ServerHelper;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
 import org.bukkit.block.Block;

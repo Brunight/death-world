@@ -1,4 +1,4 @@
-package io.papermc.deathworld.Helpers;
+package io.papermc.deathworld.helpers;
 
 import java.io.BufferedWriter;
 import java.io.File;

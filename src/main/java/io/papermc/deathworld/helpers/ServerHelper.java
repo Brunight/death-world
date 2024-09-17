@@ -1,4 +1,4 @@
-package io.papermc.deathworld.Helpers;
+package io.papermc.deathworld.helpers;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

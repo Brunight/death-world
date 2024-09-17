@@ -1,7 +1,7 @@
 package io.papermc.deathworld.listeners;
 
 import io.papermc.deathworld.DeathWorldPlugin;
-import io.papermc.deathworld.Helpers.PlayerHelper;
+import io.papermc.deathworld.helpers.PlayerHelper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
