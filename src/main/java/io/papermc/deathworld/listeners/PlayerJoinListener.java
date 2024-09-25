@@ -47,6 +47,8 @@ public class PlayerJoinListener implements Listener {
             return;
         }
 
+        // Player is in an incorrect world. Fix respawn location, clear data and teleport to current world.
+
         player.teleport(currentWorld.getSpawnLocation());
         PlayerHelper.resetPlayer(player);
 

@@ -2,6 +2,7 @@ package io.papermc.deathworld.listeners;
 
 import io.papermc.deathworld.DeathWorldPlugin;
 import io.papermc.deathworld.enums.DeathWorldMode;
+import io.papermc.deathworld.helpers.ServerHelper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -38,8 +39,10 @@ public class CommandListener implements CommandExecutor {
                 } else if (args[0].equalsIgnoreCase("setmode")) {
                     String newMode = args[1];
                     return switch (newMode) {
-                        case "killall", "world" -> {
-                            this.plugin.setMode(DeathWorldMode.getMode(newMode));
+                        case "killall", "default", "none" -> {
+                            DeathWorldMode newModeEnum = DeathWorldMode.getMode(newMode);
+                            this.plugin.setMode(newModeEnum);
+                            ServerHelper.say("Death World mode was set to '" + newModeEnum.toString() + "'!");
 
                             yield true;
                         }

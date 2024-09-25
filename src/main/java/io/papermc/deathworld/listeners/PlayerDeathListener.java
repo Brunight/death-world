@@ -94,7 +94,7 @@ public class PlayerDeathListener implements Listener {
     }
 
     private Boolean shouldDeathCount(Player p) {
-        if (p.getWorld().getName().equals("lobby") || playerResetCause != null) {
+        if (p.getWorld().getName().equals("lobby") || playerResetCause != null || this.plugin.getMode().equals(DeathWorldMode.NONE)) {
             return false;
         }
 

@@ -35,8 +35,9 @@ public class DeathWorldPlugin extends JavaPlugin {
         mainConfig.addDefault("mode", DeathWorldMode.DEFAULT.toString());
         mainConfig.setComments("mode", List.of(
                 "Death World mode.",
-                "'world' will create a new world on player death;",
+                "'default' will create a new world on player death;",
                 "'killall' will kill everyone, but current world is kept.",
+                "'none' will do nothing.",
                 "Defaults to 'default'."));
         mainConfig.addDefault("autoGenerateNewWorld", true);
         mainConfig.setComments("autoGenerateNewWorld", List.of(

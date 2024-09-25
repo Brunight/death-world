@@ -13,6 +13,10 @@ In this mode, after a player dies, a new world will be generated and gameplay wi
 In this mode, after a player dies, everyone is also killed, and the current world progress is kept.\
 Players that were offline when a death happened will be killed upon joining the server (it will not be counted to trigger a death).
 
+### `none`
+In this mode, after a player dies, nothing is done.\
+Deaths will not be counted. No death messages are sent. Player will "vanilla-die", that is, will lose items and EXP. 
+
 ## Commands
 
 ### `/dw start`
@@ -28,6 +32,7 @@ This means that the target player will die, but will not trigger a world death a
 
 - `default` will create a new world on player death;
 - `killall` will kill everyone, but current world and progress is kept.
+- `none` will do nothing, and won't track deaths.
 
 See more details about modes above. Defaults to `default`.
 
