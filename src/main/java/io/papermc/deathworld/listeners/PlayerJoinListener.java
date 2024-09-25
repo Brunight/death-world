@@ -27,9 +27,15 @@ public class PlayerJoinListener implements Listener {
         PlayerHelper.setDeathCountIntoPlayerNickname(player, deathCount);
 
         World currentWorld = this.plugin.worldManager.getCurrentWorld();
+        World currentWorldNether = this.plugin.worldManager.getCurrentWorldNether();
+        World currentWorldTheEnd = this.plugin.worldManager.getCurrentWorldTheEnd();
 
         // Check if the player is already in the current world
-        if (player.getWorld().equals(currentWorld)) {
+        if (
+                player.getWorld().equals(currentWorld) ||
+                        player.getWorld().equals(currentWorldNether) ||
+                        player.getWorld().equals(currentWorldTheEnd)
+        ) {
             if (this.plugin.getMode() == DeathWorldMode.KILL_ALL) {
                 if (this.plugin.playersToKillOnLoginManager.isPlayerInKillOnLoginList(player)) {
                     player.sendMessage(Component.text("Someone died while you were offline.").color(NamedTextColor.GOLD));

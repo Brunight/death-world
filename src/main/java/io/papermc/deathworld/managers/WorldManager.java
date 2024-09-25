@@ -24,6 +24,8 @@ public class WorldManager {
     final private DeathWorldPlugin plugin;
 
     private World currentWorld;
+    private World currentWorldNether;
+    private World currentWorldTheEnd;
     private World lobbyWorld;
 
     public WorldManager(DeathWorldPlugin plugin) {
@@ -37,7 +39,10 @@ public class WorldManager {
             currentWorld = lobbyWorld;
             plugin.mainConfig.set("currentWorld", "lobby");
             plugin.saveConfig();
+            return;
         }
+        currentWorldNether = loadWorld(currentWorldName + "_nether");
+        currentWorldTheEnd = loadWorld(currentWorldName + "_the_end");
     }
 
     private World loadWorld(String worldName) {
@@ -46,7 +51,18 @@ public class WorldManager {
             // World not loaded; attempt to load it
             File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
             if (worldFolder.exists()) {
-                world = Bukkit.createWorld(new WorldCreator(worldName));
+                WorldCreator worldCreator = new WorldCreator(worldName);
+
+                // Determine environment based on the folder name or some configuration
+                if (worldName.toLowerCase().contains("nether")) {
+                    worldCreator.environment(World.Environment.NETHER);
+                } else if (worldName.toLowerCase().contains("the_end")) {
+                    worldCreator.environment(World.Environment.THE_END);
+                } else {
+                    worldCreator.environment(World.Environment.NORMAL);
+                }
+
+                world = Bukkit.createWorld(worldCreator);
             } else {
                 return null;
             }
@@ -97,6 +113,14 @@ public class WorldManager {
         return this.currentWorld;
     }
 
+    public World getCurrentWorldNether() {
+        return this.currentWorldNether;
+    }
+
+    public World getCurrentWorldTheEnd() {
+        return this.currentWorldTheEnd;
+    }
+
     public void createNewGameplayWorld() {
         new BukkitRunnable() {
             @Override
@@ -111,15 +135,13 @@ public class WorldManager {
                     public void run() {
                         if (currentWorld != null && !currentWorld.equals(lobbyWorld)) {
                             // Unload and delete the Nether
-                            World oldNetherWorld = loadWorld(currentWorld.getName() + "_nether");
-                            if (oldNetherWorld != null) {
-                                unloadAndDeleteWorld(oldNetherWorld);
+                            if (currentWorldNether != null) {
+                                unloadAndDeleteWorld(currentWorldNether);
                             }
 
                             // Unload and delete the End
-                            World oldEndWorld = loadWorld(currentWorld.getName() + "_the_end");
-                            if (oldEndWorld != null) {
-                                unloadAndDeleteWorld(oldEndWorld);
+                            if (currentWorldTheEnd != null) {
+                                unloadAndDeleteWorld(currentWorldTheEnd);
                             }
 
                             // Unload and delete the Overworld
@@ -159,6 +181,8 @@ public class WorldManager {
                         endWorld.setDifficulty(difficulty);
                         // Update the current world reference to the new Overworld
                         currentWorld = overworld;
+                        currentWorldNether = netherWorld;
+                        currentWorldTheEnd = endWorld;
                         plugin.mainConfig.set("currentWorld", newWorldName);
                         plugin.saveConfig();
 
