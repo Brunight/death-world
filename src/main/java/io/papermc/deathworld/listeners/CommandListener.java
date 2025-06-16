@@ -6,6 +6,7 @@ import io.papermc.deathworld.helpers.ServerHelper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -72,6 +73,14 @@ public class CommandListener implements CommandExecutor {
                     }
 
                     return true;
+                } else if (args[0].equalsIgnoreCase("getworld")) {
+                    if (sender instanceof Player player) {
+                        World world = player.getWorld();
+                        player.sendMessage(Component.text("You are in world '" + world.getName() + "' of type '" + world.getEnvironment().name() + "'").color(NamedTextColor.GOLD));
+                        return true;
+                    }
+
+                    return false;
                 }
             }
         }
