@@ -25,15 +25,16 @@ public class PlayerPortalListener implements Listener {
 
         if (worldPlayerIsTeleportingFrom.equals(currentWorld)) {
             if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)) {
-                event.setTo(currentWorldTheEnd.getSpawnLocation());
+                // If the player is using an end portal, teleport them to the end world
+                event.getTo().setWorld(currentWorldTheEnd);
                 return;
             }
 
-            event.setTo(currentWorldNether.getSpawnLocation());
-        } else if (worldPlayerIsTeleportingFrom.equals(currentWorldNether)) {
-            event.setTo(currentWorld.getSpawnLocation());
-        } else if (worldPlayerIsTeleportingFrom.equals(currentWorldTheEnd)) {
-            event.setTo(currentWorld.getSpawnLocation());
+            // If the player is using a nether portal, teleport them to the nether world
+            event.getTo().setWorld(currentWorldNether);
+        } else if (worldPlayerIsTeleportingFrom.equals(currentWorldNether) || worldPlayerIsTeleportingFrom.equals(currentWorldTheEnd)) {
+            // If the player is using a nether portal or end portal from the nether or end world, teleport them back to the main world
+            event.getTo().setWorld(currentWorld);
         }
     }
 }
