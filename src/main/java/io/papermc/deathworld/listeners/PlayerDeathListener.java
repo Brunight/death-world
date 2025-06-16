@@ -75,6 +75,10 @@ public class PlayerDeathListener implements Listener {
 
         Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
             if (mode.equals(DeathWorldMode.DEFAULT)) {
+                Bukkit.getOnlinePlayers().forEach(p -> {
+                    PlayerHelper.resetPlayer(p);
+                    p.teleport(lobby);
+                });
                 if (autoGenerateNewWorld) {
                     this.plugin.worldManager.createNewGameplayWorld();
                 }

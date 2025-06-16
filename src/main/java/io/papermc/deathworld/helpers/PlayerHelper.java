@@ -34,6 +34,8 @@ public class PlayerHelper {
         player.setFoodLevel(20);
         player.setFireTicks(0);
         player.clearActivePotionEffects();
+        player.setSaturation(10);
+        player.setInvulnerable(false);
         // Clear all advancements for the player
         Bukkit.getServer().advancementIterator().forEachRemaining(adv -> {
             AdvancementProgress progress = player.getAdvancementProgress(adv);
