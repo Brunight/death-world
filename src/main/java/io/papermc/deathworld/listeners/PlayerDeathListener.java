@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import java.time.Duration;
@@ -34,13 +33,15 @@ public class PlayerDeathListener implements Listener {
         final boolean autoGenerateNewWorld = this.plugin.mainConfig.getBoolean("autoGenerateNewWorld");
 
         // Fix broken bed (null respawn point) for killall mode
-        if (mode.equals(DeathWorldMode.KILL_ALL)) {
+        if (!mode.equals(DeathWorldMode.DEFAULT)) {
             World currentWorld = this.plugin.worldManager.getCurrentWorld();
             PlayerHelper.fixPlayerRespawnPoint(deadPlayer, currentWorld);
         }
 
         if (!shouldDeathCount(deadPlayer)) {
-            event.deathMessage(null);
+            if (!mode.equals(DeathWorldMode.NONE)) {
+                event.deathMessage(null);
+            }
 
             return;
         }
