@@ -6,6 +6,7 @@ import io.papermc.deathworld.listeners.CommandListener;
 import io.papermc.deathworld.listeners.PlayerDeathListener;
 import io.papermc.deathworld.listeners.PlayerJoinListener;
 import io.papermc.deathworld.listeners.PlayerPortalListener;
+import io.papermc.deathworld.listeners.EntityPortalListener;
 import io.papermc.deathworld.managers.DeathCountManager;
 import io.papermc.deathworld.managers.PlayersToKillOnLoginManager;
 import io.papermc.deathworld.managers.WorldManager;
@@ -62,6 +63,7 @@ public class DeathWorldPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerPortalListener(this), this);
+        getServer().getPluginManager().registerEvents(new EntityPortalListener(this), this);
     }
 
     public DeathWorldMode getMode() {
