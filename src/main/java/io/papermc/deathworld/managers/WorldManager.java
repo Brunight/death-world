@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class WorldManager {
@@ -121,7 +122,20 @@ public class WorldManager {
         return this.currentWorldTheEnd;
     }
 
+    @Nullable
+    public Long getCurrentWorldSeed() {
+        if (this.currentWorld == null) {
+            return null;
+        }
+
+        return this.currentWorld.getSeed();
+    }
+
     public void createNewGameplayWorld() {
+        createNewGameplayWorld(null);
+    }
+
+    public void createNewGameplayWorld(@Nullable String seed) {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -133,6 +147,17 @@ public class WorldManager {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
+
+                        Long seedLong = null;
+
+                        if (Objects.nonNull(seed)) {
+                            try {
+                                seedLong = Long.parseLong(seed);
+                            } catch (NumberFormatException e) {
+                                seedLong = Long.valueOf(seed.hashCode());
+                            }
+                        }
+
                         if (currentWorld != null && !currentWorld.equals(lobbyWorld)) {
                             // Unload and delete the Nether
                             if (currentWorldNether != null) {
@@ -150,20 +175,32 @@ public class WorldManager {
 
                         Difficulty difficulty = Bukkit.getWorlds().getFirst().getDifficulty();
 
+                        WorldCreator overworldCreator = new WorldCreator(newWorldName)
+                                .environment(World.Environment.NORMAL)
+                                .keepSpawnLoaded(TriState.FALSE);
+
+                        if (Objects.nonNull(seedLong)) {
+                            overworldCreator.seed(seedLong);
+                        }
+
                         // Create Overworld
-                        World overworld = Bukkit
-                                .createWorld(new WorldCreator(newWorldName).environment(World.Environment.NORMAL)
-                                        .keepSpawnLoaded(TriState.FALSE));
+                        World overworld = Bukkit.createWorld(overworldCreator);
                         if (overworld == null) {
                             plugin.getSLF4JLogger().error("Failed to create the Overworld.");
                             return;
                         }
                         overworld.setDifficulty(difficulty);
 
+                        WorldCreator netherCreator = new WorldCreator(newWorldName + "_nether")
+                                .environment(World.Environment.NETHER)
+                                .keepSpawnLoaded(TriState.FALSE);
+                        if (Objects.nonNull(seedLong)) {
+                            netherCreator.seed(seedLong);
+                        }
+
                         // Create Nether
-                        World netherWorld = Bukkit.createWorld(
-                                new WorldCreator(newWorldName + "_nether").environment(World.Environment.NETHER)
-                                        .keepSpawnLoaded(TriState.FALSE));
+                        World netherWorld = Bukkit.createWorld(netherCreator);
+
                         if (netherWorld == null) {
                             plugin.getSLF4JLogger().error("Failed to create the Nether world.");
                             return;
@@ -171,9 +208,15 @@ public class WorldManager {
                         netherWorld.setDifficulty(difficulty);
 
                         // Create The End
-                        World endWorld = Bukkit.createWorld(
-                                new WorldCreator(newWorldName + "_the_end").environment(World.Environment.THE_END)
-                                        .keepSpawnLoaded(TriState.FALSE));
+                        WorldCreator endCreator = new WorldCreator(newWorldName + "_the_end")
+                                .environment(World.Environment.THE_END)
+                                .keepSpawnLoaded(TriState.FALSE);
+
+                        if (Objects.nonNull(seedLong)) {
+                            endCreator.seed(seedLong);
+                        }
+
+                        World endWorld = Bukkit.createWorld(endCreator);
                         if (endWorld == null) {
                             plugin.getSLF4JLogger().error("Failed to create The End world.");
                             return;
@@ -269,22 +312,26 @@ public class WorldManager {
         }
 
         @Override
-        public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z, @NotNull ChunkData chunkData) {
+        public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z,
+                @NotNull ChunkData chunkData) {
             // Do nothing for void world
         }
 
         @Override
-        public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z, @NotNull ChunkData chunkData) {
+        public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z,
+                @NotNull ChunkData chunkData) {
             // Do nothing for void world
         }
 
         @Override
-        public void generateBedrock(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z, @NotNull ChunkData chunkData) {
+        public void generateBedrock(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z,
+                @NotNull ChunkData chunkData) {
             // Do nothing for void world
         }
 
         @Override
-        public void generateCaves(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z, @NotNull ChunkData chunkData) {
+        public void generateCaves(@NotNull WorldInfo worldInfo, @NotNull Random random, int x, int z,
+                @NotNull ChunkData chunkData) {
             // Do nothing for void world
         }
 

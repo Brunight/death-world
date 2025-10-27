@@ -2,10 +2,13 @@ package io.papermc.deathworld.listeners;
 
 import io.papermc.deathworld.DeathWorldPlugin;
 import io.papermc.deathworld.enums.DeathWorldMode;
+import io.papermc.deathworld.helpers.PlayerHelper;
 import io.papermc.deathworld.helpers.ServerHelper;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,7 +30,12 @@ public class CommandListener implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("dw")) {
             if (args.length > 0) {
                 if (args[0].equalsIgnoreCase("start")) {
-                    this.plugin.worldManager.createNewGameplayWorld();
+                    Bukkit.getOnlinePlayers().forEach(p -> {
+                        PlayerHelper.resetPlayer(p);
+                        p.teleport(this.plugin.worldManager.getLobbyWorld().getSpawnLocation());
+                    });
+                    String seed = args.length > 1 ? args[1] : null;
+                    this.plugin.worldManager.createNewGameplayWorld(seed);
                     return true;
                 } else if (args[0].equalsIgnoreCase("lobby")) {
                     if (sender instanceof Player player) {
@@ -64,9 +72,12 @@ public class CommandListener implements CommandExecutor {
                     try {
                         Player target = Objects.requireNonNull(Bukkit.getPlayer(args[1]));
                         target.setMetadata("softkill", new FixedMetadataValue(plugin, true));
-                        target.sendMessage(Component.text("You were softkilled by an admin. This death will not be counted or tracked.").color(NamedTextColor.GOLD));
+                        target.sendMessage(Component
+                                .text("You were softkilled by an admin. This death will not be counted or tracked.")
+                                .color(NamedTextColor.GOLD));
                         target.setHealth(0);
-                        sender.sendMessage(Component.text("You softkilled " + target.getName()).color(NamedTextColor.GOLD));
+                        sender.sendMessage(
+                                Component.text("You softkilled " + target.getName()).color(NamedTextColor.GOLD));
                     } catch (Exception e) {
                         sender.sendMessage(Component.text("Player not found!").color(NamedTextColor.GOLD));
                         return false;
@@ -76,7 +87,51 @@ public class CommandListener implements CommandExecutor {
                 } else if (args[0].equalsIgnoreCase("getworld")) {
                     if (sender instanceof Player player) {
                         World world = player.getWorld();
-                        player.sendMessage(Component.text("You are in world '" + world.getName() + "' of type '" + world.getEnvironment().name() + "'").color(NamedTextColor.GOLD));
+                        player.sendMessage(Component.text("You are in world '" + world.getName() + "' of type '"
+                                + world.getEnvironment().name() + "'").color(NamedTextColor.GOLD));
+                        return true;
+                    }
+
+                    return false;
+                } else if (args[0].equalsIgnoreCase("setspawn")) {
+                    if (sender instanceof Player player) {
+                        World world = player.getWorld();
+                        World currentWorld = this.plugin.worldManager.getCurrentWorld();
+
+                        if (!world.equals(currentWorld)) {
+                            player.sendMessage(
+                                    Component.text("You are not in a Death World.").color(NamedTextColor.GOLD));
+                            return false;
+                        }
+
+                        Location spawnLocation = player.getLocation();
+                        currentWorld.setSpawnLocation(spawnLocation);
+                        player.sendMessage(
+                                Component
+                                        .text("Spawn location set to " + spawnLocation.getBlockX() + ", "
+                                                + spawnLocation.getBlockY() + ", " + spawnLocation.getBlockZ()
+                                                + " in world '" + currentWorld.getName() + "'")
+                                        .color(NamedTextColor.GOLD));
+                        return true;
+                    }
+
+                    return false;
+                } else if (args[0].equalsIgnoreCase("getseed")) {
+                    if (sender instanceof Player player) {
+                        Long seed = this.plugin.worldManager.getCurrentWorldSeed();
+                        if (seed == null) {
+                            player.sendMessage(Component.text("No world Death World is currently running.")
+                                    .color(NamedTextColor.GOLD));
+                            return false;
+                        }
+                        String seedString = seed.toString();
+
+                        player.sendMessage(
+                                Component.text("Seed: ", NamedTextColor.GOLD)
+                                        .append(Component.text(seedString, NamedTextColor.RED)
+                                                .clickEvent(ClickEvent.copyToClipboard(seedString)))
+                                        .append(Component.text(" [Click to copy]", NamedTextColor.GOLD)
+                                                .clickEvent(ClickEvent.copyToClipboard(seedString))));
                         return true;
                     }
 
