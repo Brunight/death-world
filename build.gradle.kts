@@ -12,11 +12,11 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.+")
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
 }
 
 tasks {
@@ -27,7 +27,7 @@ tasks {
         downloadPlugins {
             github("SkinsRestorer", "SkinsRestorer", "15.4.2", "SkinsRestorer.jar")
         }
-        minecraftVersion("1.21.1")
+        minecraftVersion("26.2")
         jvmArgs("-Dcom.mojang.eula.agree=true")
         systemProperty("terminal.jline", false)
         systemProperty("terminal.ansi", true)
