@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -47,12 +48,18 @@ public class WorldManager {
     }
 
     private World loadWorld(String worldName) {
-        World world = Bukkit.getWorld(worldName);
+        NamespacedKey worldKey = new NamespacedKey(plugin, worldName);
+        World world = Bukkit.getWorld(worldKey);
         if (world == null) {
+            Path baseLevelDir = Bukkit.getServer().getLevelDirectory();
+            
+            Path worldFolderDir = baseLevelDir.resolve("dimensions")
+                                                .resolve(worldKey.getNamespace())
+                                                .resolve(worldKey.getKey());
             // World not loaded; attempt to load it
-            File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
+            File worldFolder = worldFolderDir.toFile();
             if (worldFolder.exists()) {
-                WorldCreator worldCreator = new WorldCreator(worldName);
+                WorldCreator worldCreator = WorldCreator.ofKey(worldKey);
 
                 // Determine environment based on the folder name or some configuration
                 if (worldName.toLowerCase().contains("nether")) {
@@ -78,7 +85,8 @@ public class WorldManager {
         }
 
         this.plugin.getSLF4JLogger().info("Lobby world not found! Creating a new lobby world...");
-        WorldCreator creator = new WorldCreator("lobby");
+        NamespacedKey lobbyKey = new NamespacedKey(plugin, "lobby");
+        WorldCreator creator = WorldCreator.ofKey(lobbyKey);
         creator.generator(new VoidWorldGenerator());
         creator.type(WorldType.FLAT);
         World world = Bukkit.createWorld(creator);
@@ -175,9 +183,10 @@ public class WorldManager {
 
                         Difficulty difficulty = Bukkit.getWorlds().getFirst().getDifficulty();
 
-                        WorldCreator overworldCreator = new WorldCreator(newWorldName)
+                        NamespacedKey overworldKey = new NamespacedKey(plugin, newWorldName);
+                        WorldCreator overworldCreator = WorldCreator.ofKey(overworldKey)
                                 .environment(World.Environment.NORMAL)
-                                .keepSpawnLoaded(TriState.FALSE);
+                                .clearForcedSpawnPosition();
 
                         if (Objects.nonNull(seedLong)) {
                             overworldCreator.seed(seedLong);
@@ -191,9 +200,10 @@ public class WorldManager {
                         }
                         overworld.setDifficulty(difficulty);
 
-                        WorldCreator netherCreator = new WorldCreator(newWorldName + "_nether")
+                        NamespacedKey netherKey = new NamespacedKey(plugin, newWorldName + "_nether");
+                        WorldCreator netherCreator = WorldCreator.ofKey(netherKey)
                                 .environment(World.Environment.NETHER)
-                                .keepSpawnLoaded(TriState.FALSE);
+                                .clearForcedSpawnPosition();
                         if (Objects.nonNull(seedLong)) {
                             netherCreator.seed(seedLong);
                         }
@@ -208,9 +218,10 @@ public class WorldManager {
                         netherWorld.setDifficulty(difficulty);
 
                         // Create The End
-                        WorldCreator endCreator = new WorldCreator(newWorldName + "_the_end")
+                        NamespacedKey theEndKey = new NamespacedKey(plugin, newWorldName + "_the_end");
+                        WorldCreator endCreator = WorldCreator.ofKey(theEndKey)
                                 .environment(World.Environment.THE_END)
-                                .keepSpawnLoaded(TriState.FALSE);
+                                .clearForcedSpawnPosition();
 
                         if (Objects.nonNull(seedLong)) {
                             endCreator.seed(seedLong);
@@ -305,7 +316,7 @@ public class WorldManager {
     }
 
     // Custom chunk generator for a void world
-    public static class VoidWorldGenerator extends ChunkGenerator {
+    public static class VoidWorldGenerator extends ChunkGenerator {          
         @Override
         public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
             return List.of();
